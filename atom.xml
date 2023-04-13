@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>魂酱の小窝</title>
+  
+  <subtitle>每走一步，脚下是碎落的真心</subtitle>
+  <link href="https://www.furriesclub.online/atom.xml" rel="self"/>
+  
+  <link href="https://www.furriesclub.online/"/>
+  <updated>2023-04-13T03:13:30.089Z</updated>
+  <id>https://www.furriesclub.online/</id>
+  
+  <author>
+    <name>银灵魂酱</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>npm run导致的oom问题重现与解决</title>
+    <link href="https://www.furriesclub.online/2023/04/12/npm-run-oom-problem-shooting/"/>
+    <id>https://www.furriesclub.online/2023/04/12/npm-run-oom-problem-shooting/</id>
+    <published>2023-04-12T08:23:14.000Z</published>
+    <updated>2023-04-13T03:13:30.089Z</updated>
+    
+    <content type="html"><![CDATA[<p>当我在跑一个vue项目时，响应极其慢，后来按了F12才发现是app.vue加载时间过长导致的，也就以为是包太大了。</p><p>但是没过一会，项目被force stop了，翻了一下日志才发现是内存的锅</p><p><img src="https://i.328888.xyz/2023/04/13/iXayhA.png" alt="oom"></p><p>大概意思就是：JavaScript内存不足，因为我的项目是vue项目 运行在node环境，所以应该是node内存溢出之类的问题</p><p>其原因是JavaScript 内存不足，指的就是Node,Node 基于V8引擎， Node 中通过script使用的内存只是很小的一部分(64位系统下约为1.4 GB，32位系统下约为0.7 GB)，当我们的开发中包比较大时，就容易形成内存不足（本文中的包大约为600Mb）</p><p><img src="https://i.328888.xyz/2023/04/13/iXabHL.png" alt="packages"></p><p>既然原因知道了，接下来就是修复这个问题</p><p>方法一：</p><pre><code>setx NODE_OPTIONS --max_old_space_size=8176</code></pre><p>其原理就是设置node的最大内存，和java的-XmX很类似，这样可以有一定程度上的帮助。 但是要注意的是，如果参数设置过小，依旧可能会引发oom问题，所以建议根据自己电脑的配置来设置参数</p><p>方法二：</p><p>依赖increase-memory-limit插件，增加node服务器内存限制</p><p>首先执行:</p><pre><code>npm install increase-memory-limit</code></pre><p>下载increase-memory-limit之后 在scripts中增加一句设置内存的代码</p><pre><code>&quot;scripts&quot;: &#123;    &quot;dev&quot;: &quot;vite&quot;,    &quot;build&quot;: &quot;vue-tsc &amp;&amp; vite build&quot;,    &quot;preview&quot;: &quot;vite preview&quot;,    &quot;typecheck&quot;: &quot;vue-tsc --noEmit&quot;,    &quot;lint&quot;: &quot;eslint --color .&quot;,    &quot;lint:fix&quot;: &quot;eslint --color --fix .&quot;,    &quot;style&quot;: &quot;prettier -c .&quot;,    &quot;style:fix&quot;: &quot;prettier -w .&quot;,    &quot;fix-memory-limit&quot;: &quot;cross-env LIMIT=8048 increase-memory-limit&quot;  &#125;,</code></pre><p>接下来在项目根目录执行 </p><pre><code>npm run fix-memory-limit</code></pre><p>重新<code>npm run dev</code> 以应用设置即可</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;当我在跑一个vue项目时，响应极其慢，后来按了F12才发现是app.vue加载时间过长导致的，也就以为是包太大了。&lt;/p&gt;
+&lt;p&gt;但是没过一会，项目被force stop了，翻了一下日志才发现是内存的锅&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://i.328888.x</summary>
+      
+    
+    
+    
+    <category term="技术" scheme="https://www.furriesclub.online/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+    <category term="前端" scheme="https://www.furriesclub.online/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>世界你好</title>
+    <link href="https://www.furriesclub.online/2023/04/11/hello-world/"/>
+    <id>https://www.furriesclub.online/2023/04/11/hello-world/</id>
+    <published>2023-04-11T08:47:02.058Z</published>
+    <updated>2023-04-12T08:20:23.627Z</updated>
+    
+    <content type="html"><![CDATA[<p>千里之行，始于足下..</p><p>试着记录点什么</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;千里之行，始于足下..&lt;/p&gt;
+&lt;p&gt;试着记录点什么&lt;/p&gt;
+</summary>
+      
+    
+    
+    
+    <category term="杂谈" scheme="https://www.furriesclub.online/categories/%E6%9D%82%E8%B0%88/"/>
+    
+    
+    <category term="杂谈" scheme="https://www.furriesclub.online/tags/%E6%9D%82%E8%B0%88/"/>
+    
+  </entry>
+  
+</feed>
